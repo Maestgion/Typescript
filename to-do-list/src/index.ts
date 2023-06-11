@@ -29,8 +29,9 @@ type Task = {
 
 }
 
+const allTasks: Task[] = getTasks()
 
-
+allTasks.forEach(addTask)
 
 newTaskForm?.addEventListener("submit", (e)=>{
   e.preventDefault();
@@ -49,8 +50,12 @@ newTaskForm?.addEventListener("submit", (e)=>{
     createdAt: new Date(),
   }
 
+  allTasks.push(newTask)
+  saveTasks()
+
   addTask(newTask)
   console.log(newTask)
+  newTaskTitle.value=""
 
 
 })
@@ -60,12 +65,25 @@ function addTask(newTask: Task) {
   const taskLabel = document.createElement("label")
   const checkbox = document.createElement("input")
   checkbox.type = "checkbox"
+  checkbox.addEventListener("change", ()=>{
+    newTask.isCompleted = checkbox.checked
+    saveTasks()
+  })
   checkbox.checked = newTask.isCompleted
   taskLabel.append(checkbox, newTask.title)
-  console.log(newTaskTitle)
   taskListItem.append(taskLabel)
-  console.log(taskLabel)
   list?.append(taskListItem)
-  console.log(taskListItem)
 }
 
+function saveTasks(){
+  localStorage.setItem("tasks", JSON.stringify(allTasks))
+}
+
+function getTasks():Task[] {
+  const taskData = localStorage.getItem("tasks")
+  if(taskData==null)
+    return []
+
+  return JSON.parse(taskData)
+}
+ 
