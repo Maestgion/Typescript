@@ -8,52 +8,64 @@ const list = document.querySelector<HTMLUListElement>("#list")
 // It enables the typeescript to know the types of the Elements. But, not every functions has the generic syntax to add onto it. E.g. getElementById
 // But, we can explicitly do that, like done below!!
 
-const newTaskForm = document.getElementById("#new-task-form") as HTMLFormElement | null
+const newTaskForm = document.getElementById("new-task-form") as HTMLFormElement | null
 
-const newTaskTitle = document.querySelector<HTMLInputElement>("#new-task-list")
+const newTaskTitle = document.querySelector<HTMLInputElement>("#new-task-title")
 
+// enum Priority{
+//   low="low", 
+//   medium="medium",
+//   high="high", 
+// }
 
 type Task = {
   id: string,
   title: string,
   isCompleted: boolean,
-  taskPriority: {
-    priority: Priority
-  },
+  // taskPriority: {
+  //   priority: Priority
+  // },
   createdAt: Date
 
 }
 
-enum Priority{
-  low="low", 
-  medium="medium",
-  high="high", 
-}
+
 
 
 newTaskForm?.addEventListener("submit", (e)=>{
   e.preventDefault();
-
+  console.log("iohh")
+  console.log(newTaskTitle)
   if(newTaskTitle?.value == " " || newTaskTitle?.value == null) return
-
 
 
   const newTask: Task ={
     id: uuidV4(),
     title: newTaskTitle.value,
     isCompleted : false,
-    taskPriority: {
-      priority: Priority.high
-    },
+    // taskPriority: {
+    //   priority: Priority.high
+    // },
     createdAt: new Date(),
   }
 
   addTask(newTask)
+  console.log(newTask)
 
 
 })
 
 function addTask(newTask: Task) {
-  
+  const taskListItem = document.createElement("li")
+  const taskLabel = document.createElement("label")
+  const checkbox = document.createElement("input")
+  checkbox.type = "checkbox"
+  checkbox.checked = newTask.isCompleted
+  taskLabel.append(checkbox, newTask.title)
+  console.log(newTaskTitle)
+  taskListItem.append(taskLabel)
+  console.log(taskLabel)
+  list?.append(taskListItem)
+  console.log(taskListItem)
 }
 
