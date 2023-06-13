@@ -78,9 +78,18 @@ export default class typewriter{
     }
 
     // start
-    start()
+    async start()
     {
-        
+        let cb = this.#action.shift()
+        while(cb)
+        {
+            await cb()
+            if(this.#loop){
+                this.#action.push(cb)
+            }
+
+            cb = this.#action.shift()
+        }
     }
 
     // adding action to the actions array by using a callback function cb which returns nothing
