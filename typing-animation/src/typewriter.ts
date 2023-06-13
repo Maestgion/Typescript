@@ -1,7 +1,7 @@
 // action elements in form of the functions
 type ActionItem = ()=>Promise<void> 
 
-export default class typewriter{
+export default class Typewriter{
     #action: ActionItem[] = []
     #element: HTMLElement
     #typingSpeed: number
@@ -24,8 +24,8 @@ export default class typewriter{
         this.#addAction(resolve=>{
             let i = 0;
             const intervalId = setInterval(()=>{
-                this.#element.innerText += string[i]
-
+                this.#element.innerText+=string[i]
+                i++
                 if(i>=string.length)
                 {
                     clearInterval(intervalId)
@@ -33,6 +33,8 @@ export default class typewriter{
                 }
             }, this.#typingSpeed)
         })
+
+        return this
     }
 
     // deleting characters 
@@ -43,7 +45,7 @@ export default class typewriter{
             let i=0
             const intervalId = setInterval(()=>{
                 this.#element.innerText = this.#element.innerText.slice(0, -1)
-
+                i++
                 if(i>=number)
                 {
                     clearInterval(intervalId)
@@ -52,6 +54,8 @@ export default class typewriter{
                 }
             }, this.#deletingSpeed)
         })
+
+        return this
     }
 
     // deleting whole senetence
@@ -67,6 +71,8 @@ export default class typewriter{
                 }
             }, this.#deletingSpeed)
         })
+
+        return this
     }
 
     // pause
@@ -75,13 +81,15 @@ export default class typewriter{
         this.#addAction(resolve=>{
             setTimeout(resolve, duration)
         })
+
+        return this
     }
 
     // start
     async start()
     {
         let cb = this.#action.shift()
-        while(cb)
+        while(cb!=null)
         {
             await cb()
             if(this.#loop){
@@ -90,6 +98,8 @@ export default class typewriter{
 
             cb = this.#action.shift()
         }
+
+        return this
     }
 
     // adding action to the actions array by using a callback function cb which returns nothing
